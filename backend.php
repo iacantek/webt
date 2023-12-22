@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Beispiel: Globale vs. lokale Variablen</title>
-</head>
-<body>
-<h1>Web Technologien</h1>
 <?php
 
+$method = $_SERVER['REQUEST_METHOD'];
+parse_str($_SERVER['QUERY_STRING'], $params);
+$body = file_get_contents("php://input");
+
+if ($method == 'GET') {
+    echo $body;
+    echo 'hello';
+}
+
 ?>
-</body>
-</html>

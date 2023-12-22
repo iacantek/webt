@@ -1,0 +1,18 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#app {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+input[type=text], input[type=number] {
+    width: 100%;
+}
+
+.validation {
+    color: red;
+}
