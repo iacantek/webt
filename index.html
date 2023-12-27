@@ -10,86 +10,138 @@
 </head>
 <body>
 
-<div id="app">
-    <h1>BMI Rechner</h1>
-
-    <h2>Anwendungsbeschreibung</h2>
-    <div class="w3-row-padding w3-stretch">
-        <div class="w3-col m12 l6">
-            <p>TBD</p>
+<div class="bar w3-row">
+    <div>
+        <div class="w3-col m2">
+            <h1>BMI</h1>
         </div>
-        <div class="w3-col m12 l6">
-            <p>TBD</p>
-        </div>
-    </div>
-
-    <hr>
-
-    <h2>Eingabebereich</h2>
-    <div class="w3-row-padding w3-stretch">
-        <div class="w3-col m12 l6">
-            <h3>Personalien</h3>
-            <label for="name">Vollständiger Name</label><br>
-            <input id="name" type="text" v-model="form.name" @input="validate('name')" required/>
-            <p v-if="validations['name']" class="validation">{{ validations['name'] }}</p>
-
-            <div class="w3-row w3-margin-top">
-                <div class="w3-col s6">
-                    <label>Geburtstag</label><br>
-                    <input type="date" v-model="form.birthday" @input="validate('birthday')" required/>
-                    <p v-if="validations['birthday']" class="validation">{{ validations['birthday'] }}</p>
-                </div>
-                <div class="w3-col s6">
-                    <label>Geschlecht</label><br>
-                    <input id="male" name="gender" type="radio" value="0" v-model="form.gender"
-                           @input="validate('gender')" required/>
-                    <label for="male">Männlich</label><br>
-                    <input id="female" name="gender" type="radio" value="1" v-model="form.gender"
-                           @input="validate('gender')" required/>
-                    <label for="female">Weiblich</label>
-                    <p v-if="validations['gender']" class="validation">{{ validations['gender'] }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="w3-col s6 l3">
-            <h3>Grösse</h3>
-            <div>
-                <label for="height-cm">Zentimeter</label><br>
-                <input id="height-cm" type="number" min="0" v-bind:max="max.height" v-model="form.height"
-                       @input="validate('height')" required/>
-                <p v-if="validations['height']" class="validation">{{ validations['height'] }}</p>
-            </div>
-            <div class="w3-margin-top">
-                <label>Foot</label>
-                <p>{{ foot }}</p>
-            </div>
-        </div>
-        <div class="w3-col s6 l3">
-            <h3>Gewicht</h3>
-            <div>
-                <label for="weight-kg">Kilogramm</label><br>
-                <input id="weight-kg" type="number" min="0" v-bind:max="max.weight" v-model="form.weight"
-                       @input="validate('weight')">
-                <p v-if="validations['weight']" class="validation">{{ validations['weight'] }}</p>
-            </div>
-            <div class="w3-margin-top">
-                <label>Pound</label>
-                <p>{{ pound }}</p>
-            </div>
+        <div class="w3-col m10">
+            <nav>
+                <a href="#usage">Anwendungsbeschreibung</a>
+                <a href="#input">Eingabebereich</a>
+                <a href="#output">Ausgabebereich</a>
+            </nav>
         </div>
     </div>
-    <button class="w3-btn w3-text-black w3-border w3-border-black w3-round-large w3-hover-green" @click="submit()">
-        BMI jetzt berechnen!
-    </button>
-
-    <hr>
-
-    <h2>Ausgabebereich</h2>
-    <p v-if="bmi">BMI = {{ bmi }} kg/m<sup>2</sup> ({{ this.conclusion }})</p>
-    <p v-else>Warte auf Eingabe für BMI Berechnung...</p>
 </div>
 
-<!--vue js code-->
+<div id="app">
+    <h2 id="usage">Anwendungsbeschreibung</h2>
+    <div class="w3-row-padding w3-stretch">
+        <div class="w3-col m6">
+            <p>Der BMI steht für Body Mass Index, zu Deutsch "Körpermasseindex". Es ist eine Kennzahl, die das
+                Verhältnis zwischen Körpergewicht und Körpergröße eines Menschen misst. Der BMI wird oft verwendet, um
+                grob einzuschätzen, ob eine Person untergewichtig, normalgewichtig, übergewichtig oder adipös
+                (fettleibig) ist.</p>
+            <p>Anwendungsbeschreibung...</p>
+        </div>
+        <div class="w3-col m6">
+            <img src="img/bmi.jpeg" alt="bmi">
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 id="input">Eingabebereich</h2>
+    <form v-on:submit.prevent="submit">
+        <div class="w3-row-padding w3-stretch">
+            <div class="w3-col l6 w3-margin-bottom">
+                <div class="w3-row-padding w3-stretch">
+                    <div class="w3-col s12 w3-margin-bottom">
+                        <label for="name">Vollständiger Name</label><br>
+                        <input id="name" type="text" v-model="form.name" @input="validate('name')" required/>
+                        <p v-if="validations['name']" class="validation">{{ validations['name'] }}</p>
+                    </div>
+                    <div class="w3-col s6">
+                        <label>Geburtstag</label><br>
+                        <input type="date" v-bind:max="constant.today" v-model="form.birthday"
+                               @input="validate('birthday')"
+                               required/>
+                        <p v-if="validations['birthday']" class="validation">{{ validations['birthday'] }}</p>
+                    </div>
+                    <div class="w3-col s6">
+                        <label>Geschlecht</label><br>
+                        <select v-model="form.gender" required>
+                            <option v-bind:value="constant.gender.male" selected>Männlich</option>
+                            <option v-bind:value="constant.gender.female">Weiblich</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="w3-col l6 w3-margin-bottom">
+                <div class="w3-row-padding w3-stretch w3-margin-bottom">
+                    <div class="w3-col s8">
+                        <label for="height-cm">Grösse</label><br>
+                        <input id="height-cm" type="number" min="0" v-bind:max="constant.max.height"
+                               v-model="form.height.value"
+                               @input="validate('height')" required/>
+                        <p v-if="validations['height']" class="validation">{{ validations['height'] }}</p>
+                    </div>
+                    <div class="w3-col s4"><br>
+                        <select v-model="form.height.unit">
+                            <option v-bind:value="constant.unit.height.cm" selected>Zentimeter</option>
+                            <option v-bind:value="constant.unit.height.ft">Feet</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="w3-row-padding w3-stretch">
+                    <div class="w3-col s8">
+                        <label for="weight-kg">Gewicht</label><br>
+                        <input id="weight-kg" type="number" min="0" v-bind:max="constant.max.weight"
+                               v-model="form.weight.value"
+                               @input="validate('weight')">
+                        <p v-if="validations['weight']" class="validation">{{ validations['weight'] }}</p>
+                    </div>
+                    <div class="w3-col s4"><br>
+                        <select v-model="form.weight.unit">
+                            <option v-bind:value="constant.unit.weight.kg" selected>Kilogramm</option>
+                            <option v-bind:value="constant.unit.weight.lbs">Pounds</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button v-bind:disabled="this.hasValidations()">
+            BMI jetzt berechnen!
+        </button>
+    </form>
+
+    <hr>
+
+    <h2 id="output">Ausgabebereich</h2>
+    <p v-if="bmi">BMI = {{ bmi }} kg/m<sup>2</sup></p>
+    <p v-else>Warte auf Eingabe für BMI Berechnung...</p>
+    <h3>History ({{ this.history.length }})</h3>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Geburtsdatum</th>
+            <th>Geschlecht</th>
+            <th>Grösse</th>
+            <th>Gewicht</th>
+            <th>BMI</th>
+        </tr>
+        <tr v-for="item in history" :key="item.id">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.birthday }}</td>
+            <td>{{ item.gender }}</td>
+            <td>{{ item.height }}</td>
+            <td>{{ item.weight }}</td>
+            <td>{{ item.bmi }}</td>
+        </tr>
+    </table>
+</div>
+
+<div class="bar">
+    <div>
+        HS2024 - WEBT by Alan Cantekin
+    </div>
+</div>
+
+<!--js code-->
+<!--<script type="module" src="js/constants.js"></script>-->
 <script src="js/vue.js"></script>
 
 </body>

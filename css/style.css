@@ -3,16 +3,66 @@
     padding: 0;
 }
 
-#app {
+.bar {
+    background: lightblue;
+}
+
+.bar:not(:first-child) {
+    margin-top: 30px;
+    padding: 10px 0;
+}
+
+nav {
+    margin-top: 20px;
+    float: right;
+}
+
+nav > a {
+    text-decoration: none;
+    font-size: 20px;
+}
+
+nav > a:hover {
+    text-decoration: underline;
+}
+
+nav > a:not(:first-child) {
+    margin-left: 10px;
+}
+
+#app, .bar > div {
     max-width: 1000px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
-input[type=text], input[type=number] {
+img {
+    max-width: 100%;
+}
+
+input, select, button, table {
+    border: solid lightgray;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+button:hover {
+    background: lightblue;
+    cursor: pointer;
+}
+
+input[type=text], input[type=number], input[type=date], select, table {
     width: 100%;
+}
+
+input[type=radio] {
+    margin-right: 5px;
 }
 
 .validation {
     color: red;
+}
+
+table tr td {
+    text-align: center;
 }
