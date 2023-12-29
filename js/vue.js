@@ -25,10 +25,6 @@ Vue.createApp({
                     height: 300, // max height in cm
                     weight: 999 // max weight in kg
                 },
-                operand: {
-                    weight: 2.2, // kg to lbs
-                    height: 30.48 // cm to foot
-                },
                 unit: {
                     height: {
                         cm: 0,
@@ -43,6 +39,7 @@ Vue.createApp({
                     male: 0,
                     female: 1
                 },
+                genders: ["männlich", "weiblich"],
                 today: new Date().toISOString().split('T')[0]
             }
         }
@@ -66,10 +63,14 @@ Vue.createApp({
                 .then(response => {
                     this.history.unshift(response);
                     this.bmi = response.bmi;
+                    // TODO: draw canvas
                 })
                 .catch(error => {
                     console.error(error);
                 });
+        },
+        drawCanvas() {
+
         },
         validateFields() {
             let fieldNames = ["name", "birthday", "height", "weight"];
@@ -81,34 +82,34 @@ Vue.createApp({
                 case "name":
                     if (!this.form.name) { // check if name is empty
                         this.validations['name'] = RequiredValidationMessage.replace("%s", "Vollständiger Name");
-                    } else {
+                    } else { // clear validation
                         delete this.validations['name'];
                     }
                     break;
                 case "birthday":
                     if (!this.form.birthday) { // check if birthday is empty
                         this.validations['birthday'] = RequiredValidationMessage.replace("%s", "Geburtstag");
-                    } else if (this.form.birthday > new Date()) { // check that birthday is not in the future
+                    } else if (this.form.birthday > new Date()) { // check if birthday is not in the future
                         this.validations['birthday'] = "Geburtstag darf nicht in der Zukunft liegen."
-                    } else {
+                    } else { // clear validation
                         delete this.validations['birthday'];
                     }
                     break;
                 case "height":
                     if (!this.form.height.value) { // check if height is empty
                         this.validations['height'] = RequiredValidationMessage.replace("%s", "Grösse");
-                    } else if (this.form.height.value < 0) {
+                    } else if (this.form.height.value < 0) { // check if height is a negative number
                         this.validations['height'] = NegativeNumberValidationMessage
-                    } else {
+                    } else { // clear validation
                         delete this.validations['height'];
                     }
                     break;
                 case "weight":
                     if (!this.form.weight.value) { // check if weight is empty
                         this.validations['weight'] = RequiredValidationMessage.replace("%s", "Gewicht");
-                    } else if (this.form.weight.value < 0) {
+                    } else if (this.form.weight.value < 0) { // check if weight is a negative number
                         this.validations['weight'] = NegativeNumberValidationMessage;
-                    } else {
+                    } else { // clear validation
                         delete this.validations['weight'];
                     }
                     break;
@@ -145,6 +146,23 @@ Vue.createApp({
                     xhr.send();
                 }
             });
+        },
+        getBMIColor(bmi) {
+            colorBMI = null;
+            if (bmi < 18.5) {
+                colorBMI = "#1e9ad6"; // blue
+            } else if (bmi < 25) {
+                colorBMI = "#30a248"; // green
+            } else if (bmi < 30) {
+                colorBMI = "#f6ca35"; // yellow
+            } else if (bmi < 40) {
+                colorBMI = "#f78a1f"; // orange
+            } else {
+                colorBMI = "#b92a30"; // red
+            }
+            return {
+                color: colorBMI
+            };
         }
     }
 }).mount('#app');

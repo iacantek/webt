@@ -62,8 +62,8 @@
                     <div class="w3-col s6">
                         <label>Geschlecht</label><br>
                         <select v-model="form.gender" required>
-                            <option v-bind:value="constant.gender.male" selected>Männlich</option>
-                            <option v-bind:value="constant.gender.female">Weiblich</option>
+                            <option v-bind:value="constant.gender.male" selected>{{ constant.genders[0] }}</option>
+                            <option v-bind:value="constant.gender.female">{{ constant.genders[1] }}</option>
                         </select>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
                 <div class="w3-row-padding w3-stretch w3-margin-bottom">
                     <div class="w3-col s8">
                         <label for="height-cm">Grösse</label><br>
-                        <input id="height-cm" type="number" min="0" v-bind:max="constant.max.height"
+                        <input id="height-cm" type="number" step=".1" min="0" v-bind:max="constant.max.height"
                                v-model="form.height.value"
                                @input="validate('height')" required/>
                         <p v-if="validations['height']" class="validation">{{ validations['height'] }}</p>
@@ -87,7 +87,7 @@
                 <div class="w3-row-padding w3-stretch">
                     <div class="w3-col s8">
                         <label for="weight-kg">Gewicht</label><br>
-                        <input id="weight-kg" type="number" min="0" v-bind:max="constant.max.weight"
+                        <input id="weight-kg" type="number" step=".1" min="0" v-bind:max="constant.max.weight"
                                v-model="form.weight.value"
                                @input="validate('weight')">
                         <p v-if="validations['weight']" class="validation">{{ validations['weight'] }}</p>
@@ -109,28 +109,38 @@
     <hr>
 
     <h2 id="output">Ausgabebereich</h2>
-    <p v-if="bmi">BMI = {{ bmi }} kg/m<sup>2</sup></p>
-    <p v-else>Warte auf Eingabe für BMI Berechnung...</p>
-    <h3>History ({{ this.history.length }})</h3>
+    <div class="w3-row-padding w3-stretch">
+        <div class="w3-col m6">
+            <p v-if="bmi">BMI = <b>{{ bmi }} kg/m<sup>2</sup></b></p>
+            <p v-else>Warte auf Eingabe für BMI Berechnung...</p>
+        </div>
+        <div class="w3-col m6">
+            <canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;">
+            </canvas>
+        </div>
+    </div>
+    <h3>History ({{ history.length }})</h3>
     <table>
+        <tbody>
         <tr>
-            <th>Id</th>
+            <th class="hide-mobile">Id</th>
             <th>Name</th>
-            <th>Geburtsdatum</th>
-            <th>Geschlecht</th>
+            <th class="hide-mobile">Geburtsdatum</th>
+            <th class="hide-mobile">Geschlecht</th>
             <th>Grösse</th>
             <th>Gewicht</th>
             <th>BMI</th>
         </tr>
         <tr v-for="item in history" :key="item.id">
-            <td>{{ item.id }}</td>
+            <td class="hide-mobile">{{ item.id }}</td>
             <td>{{ item.name }}</td>
-            <td>{{ item.birthday }}</td>
-            <td>{{ item.gender }}</td>
-            <td>{{ item.height }}</td>
-            <td>{{ item.weight }}</td>
-            <td>{{ item.bmi }}</td>
+            <td class="hide-mobile">{{ item.birthday }}</td>
+            <td class="hide-mobile">{{ constant.genders[item.gender] }}</td>
+            <td>{{ item.height }} cm</td>
+            <td>{{ item.weight }} kg</td>
+            <td v-bind:style="getBMIColor(item.bmi)"><b>{{ item.bmi }}</b></td>
         </tr>
+        </tbody>
     </table>
 </div>
 

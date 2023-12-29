@@ -63,6 +63,26 @@ input[type=radio] {
     color: red;
 }
 
-table tr td {
+table tbody tr td {
     text-align: center;
+}
+
+/*vertical borders*/
+table tbody tr td:not(:last-child) {
+    border-right: 1px solid lightgray;
+}
+
+table tbody tr td {
+    padding: 0 5px;
+}
+
+/*horizontal borders*/
+table tbody tr th, table tbody tr:not(:last-child) td {
+    border-bottom: 1px solid lightgray;
+}
+
+@media (max-width: 600px) {
+    .hide-mobile {
+        display: none;
+    }
 }
