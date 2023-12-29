@@ -1,6 +1,7 @@
 const RequiredValidationMessage = Object.freeze(`Das Feld "%s" darf nicht leer sein!`);
 const NegativeNumberValidationMessage = Object.freeze(`Der Wert darf nicht negativ sein!`);
 
+
 Vue.createApp({
     data() {
         return {
@@ -63,14 +64,62 @@ Vue.createApp({
                 .then(response => {
                     this.history.unshift(response);
                     this.bmi = response.bmi;
-                    // TODO: draw canvas
+                    this.drawCanvas(this.getEmotion(this.bmi)); // draw face
                 })
                 .catch(error => {
                     console.error(error);
                 });
         },
-        drawCanvas() {
+        drawCanvas(expression) {
+            const canvas = document.getElementById('faceExpression');
+            const ctx = canvas.getContext('2d');
 
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw face (circle)
+            ctx.beginPath();
+            ctx.arc(100, 100, 50, 0, Math.PI * 2);
+            ctx.fillStyle = this.getBMIColor(this.bmi);
+            ctx.fill();
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.closePath();
+
+            // Draw eyes
+            function drawEye(x, y) {
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = 'black';
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            drawEye(85, 85); // Left eye
+            drawEye(115, 85); // Right eye
+
+            ctx.beginPath();
+            switch (expression) {
+                case 'happy':
+                    ctx.arc(100, 95, 30, 0.2 * Math.PI, 0.8 * Math.PI);
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                    break;
+                case 'neutral':
+                    ctx.moveTo(75, 115);
+                    ctx.lineTo(125, 115);
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                    break;
+                case 'sad':
+                    ctx.arc(100, 140, 30, 1.2 * Math.PI, 1.8 * Math.PI); // Adjusted coordinates for a sad mouth
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                    break;
+                default:
+                    console.error('Unknown expression');
+            }
+            ctx.closePath();
         },
         validateFields() {
             let fieldNames = ["name", "birthday", "height", "weight"];
@@ -148,21 +197,16 @@ Vue.createApp({
             });
         },
         getBMIColor(bmi) {
-            colorBMI = null;
-            if (bmi < 18.5) {
-                colorBMI = "#1e9ad6"; // blue
-            } else if (bmi < 25) {
-                colorBMI = "#30a248"; // green
-            } else if (bmi < 30) {
-                colorBMI = "#f6ca35"; // yellow
-            } else if (bmi < 40) {
-                colorBMI = "#f78a1f"; // orange
-            } else {
-                colorBMI = "#b92a30"; // red
-            }
-            return {
-                color: colorBMI
-            };
+            return bmi < 18.5 ? "#1e9ad6" // blue
+                : bmi < 25 ? "#30a248" // green
+                    : bmi < 30 ? "#f6ca35" // yellow
+                        : bmi < 40 ? "#f78a1f" // orange
+                            : "#b92a30"; // red
+        },
+        getEmotion(bmi) {
+            return 18.5 <= bmi && bmi < 25 ? "happy" // happy expression
+                : bmi > 40 ? "sad" // sad expression
+                    : "neutral"; // neutral expression
         }
     }
 }).mount('#app');

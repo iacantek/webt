@@ -93,15 +93,18 @@ if ($method == 'GET') { // GET request -> returns all calculations
     $height = $form->height->unit == 0 ? $form->height->value : $form->height->value * 30.48;
 
     // calculate bmi
-    $bmi = $weight / ((($height) / 100) ^ 2);
+    $bmi = $weight / (($height / 100) ** 2);
 
-    $statement = "insert into calculation (name, birthday, gender, height, weight, bmi) values (?, ?, ?, ?, ?, ?)";
+    // prepare sql insert statement
+    $statement = "INSERT INTO calculation (name, birthday, gender, height, weight, bmi) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($conn, $statement);
 
+    // bind parameters
     mysqli_stmt_bind_param($stmt, 'ssssss', $form->name, $form->birthday, $form->gender, $height, $weight, $bmi);
+    // execute sql statement
     $res = mysqli_stmt_execute($stmt);
 
-    // return creted record as json
+    // return created record as json
     echo query_json_result($conn, "SELECT * FROM calculation ORDER BY id DESC LIMIT 1", true);
     exit;
 }

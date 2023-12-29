@@ -115,8 +115,7 @@
             <p v-else>Warte auf Eingabe für BMI Berechnung...</p>
         </div>
         <div class="w3-col m6">
-            <canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;">
-            </canvas>
+            <canvas id="faceExpression" width="200" height="200"></canvas>
         </div>
     </div>
     <h3>History ({{ history.length }})</h3>
@@ -138,7 +137,7 @@
             <td class="hide-mobile">{{ constant.genders[item.gender] }}</td>
             <td>{{ item.height }} cm</td>
             <td>{{ item.weight }} kg</td>
-            <td v-bind:style="getBMIColor(item.bmi)"><b>{{ item.bmi }}</b></td>
+            <td v-bind:style="{ color: getBMIColor(item.bmi) }"><b>{{ item.bmi }}</b></td>
         </tr>
         </tbody>
     </table>
