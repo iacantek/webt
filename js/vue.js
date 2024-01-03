@@ -1,7 +1,6 @@
 const RequiredValidationMessage = Object.freeze(`Das Feld "%s" darf nicht leer sein!`);
 const NegativeNumberValidationMessage = Object.freeze(`Der Wert darf nicht negativ sein!`);
 
-
 Vue.createApp({
     data() {
         return {
@@ -22,26 +21,7 @@ Vue.createApp({
             validations: [],
             history: [],
             constant: {
-                max: {
-                    height: 300, // max height in cm
-                    weight: 999 // max weight in kg
-                },
-                unit: {
-                    height: {
-                        cm: 0,
-                        ft: 1
-                    },
-                    weight: {
-                        kg: 0,
-                        lbs: 1
-                    }
-                },
-                gender: {
-                    male: 0,
-                    female: 1
-                },
-                genders: ["männlich", "weiblich"],
-                today: new Date().toISOString().split('T')[0]
+                genders: ["männlich", "weiblich"]
             }
         }
     },
@@ -49,6 +29,7 @@ Vue.createApp({
         this.sendRequest('GET', 'backend.php', null)
             .then(response => {
                 this.history = response;
+                this.drawCanvas(this.history[0]?.bmi ?? 18.5); // draw face
             })
             .catch(error => {
                 console.error(error);
@@ -64,13 +45,13 @@ Vue.createApp({
                 .then(response => {
                     this.history.unshift(response);
                     this.bmi = response.bmi;
-                    this.drawCanvas(this.getEmotion(this.bmi)); // draw face
+                    this.drawCanvas(this.bmi); // draw face
                 })
                 .catch(error => {
                     console.error(error);
                 });
         },
-        drawCanvas(expression) {
+        drawCanvas(bmi) {
             const canvas = document.getElementById('faceExpression');
             const ctx = canvas.getContext('2d');
 
@@ -79,7 +60,7 @@ Vue.createApp({
             // Draw face (circle)
             ctx.beginPath();
             ctx.arc(100, 100, 50, 0, Math.PI * 2);
-            ctx.fillStyle = this.getBMIColor(this.bmi);
+            ctx.fillStyle = this.getBMIColor(bmi);
             ctx.fill();
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 2;
@@ -99,7 +80,7 @@ Vue.createApp({
             drawEye(115, 85); // Right eye
 
             ctx.beginPath();
-            switch (expression) {
+            switch (this.getEmotion(bmi)) {
                 case 'happy':
                     ctx.arc(100, 95, 30, 0.2 * Math.PI, 0.8 * Math.PI);
                     ctx.lineWidth = 3;
