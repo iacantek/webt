@@ -12,8 +12,13 @@
     padding: 10px 0;
 }
 
+h1 {
+    margin-bottom: 0 !important;
+}
+
 nav {
     margin-top: 20px;
+    margin-bottom: 20px;
     float: right;
 }
 
@@ -26,8 +31,9 @@ nav > a:hover {
     text-decoration: underline;
 }
 
-nav > a:not(:first-child) {
-    margin-left: 10px;
+nav > a:not(:last-child) {
+    padding-right: 5px;
+    border-right: solid black 2px;
 }
 
 #app, .bar > div {

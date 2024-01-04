@@ -5,7 +5,7 @@ Vue.createApp({
     data() {
         return {
             bmi: null,
-            form: {
+            form: { // form data for POST request
                 name: null,
                 birthday: new Date().toISOString().split('T')[0],
                 gender: 0,
@@ -27,10 +27,12 @@ Vue.createApp({
         }
     },
     mounted() {
+        // get calculation history
         this.sendRequest('GET', 'backend.php', null)
             .then(response => {
-                this.history = response;
-                this.drawCanvas(this.history[0]?.bmi ?? 18.5); // draw face
+                this.history = response; // fill in history items
+                // draw face for first calculation
+                this.drawCanvas(this.history[0]?.bmi ?? 18.5);
             })
             .catch(error => {
                 console.error(error);
@@ -167,7 +169,8 @@ Vue.createApp({
                             reject('Could not parse JSON.')
                         }
                     } else {
-                        reject(xhr.status === 400 ? '[' + xhr.status + '] ' + JSON.parse(xhr.responseText).error : 'Request failed with status: ' + xhr.status); // Reject with an error message
+                        // Reject with an error message
+                        reject(xhr.status === 400 ? '[' + xhr.status + '] ' + JSON.parse(xhr.responseText).error : 'Request failed with status: ' + xhr.status);
                     }
                 };
                 xhr.onerror = function () {

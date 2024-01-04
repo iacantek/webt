@@ -72,11 +72,11 @@ if ($method == 'GET') { // GET request -> returns all calculations
     }
 
     // check if are fields are set
-    if (!isset($form->name) || empty($form->name) ||
+    if (!isset($form->name) || empty($form->name) || // check if name is null or empty
         !isset($form->birthday) || empty($form->birthday) ||
         !isset($form->gender) || !isset($form->height->unit) || !isset($form->weight->unit) ||
-        !isset($form->height->value) || empty($form->height->value) ||
-        !isset($form->weight->value) || empty($form->weight->value)) {
+        !isset($form->height->value) || empty($form->height->value) || // check if height is null or 0
+        !isset($form->weight->value) || empty($form->weight->value)) { // check if weight is null or 0
         bad_request("Please fill in all fields.");
     } // check if birthday is in future
     else if (new DateTime() < $birthday) {
