@@ -26,6 +26,11 @@
 </div>
 
 <div id="app">
+    <!-- displaying error message from POST request in case there's one -->
+    <div v-if="errorMessage" class="w3-panel w3-red w3-padding">
+        <b>{{ errorMessage }}</b>
+    </div>
+
     <h2 id="usage">Anwendungsbeschreibung</h2>
     <div class="w3-row-padding w3-stretch">
         <div class="w3-col m6">
@@ -33,7 +38,16 @@
                 Verhältnis zwischen Körpergewicht und Körpergröße eines Menschen misst. Der BMI wird oft verwendet, um
                 grob einzuschätzen, ob eine Person untergewichtig, normalgewichtig, übergewichtig oder adipös
                 (fettleibig) ist.</p>
-            <p>Anwendungsbeschreibung...</p>
+            <p>Im Eingabebereich müssen alle Daten ausgefüllt werden. Bei den Angaben zur Grösse und Gewicht können
+                zwischen jeweils zwei Angaben ausgewählt werden.</p>
+            <p><b>Grösse:</b> Zentimeter & Feet</p>
+            <p><b>Gewicht:</b> Kilogramm & Pounds</p>
+            <p>
+                Der BMI wird in jedem Fall in Zentimeter und Kilogramm berechnet, was bedeutet, dass die Werte zuerst
+                umberechnet werden, falls nötig.
+            </p>
+            <p>Alle Angaben werden zudem in der Datenbank gespeichert und in der History im Ausgabebereich
+                angezeigt.</p>
         </div>
         <div class="w3-col m6">
             <img src="img/bmi.jpeg" alt="bmi">
@@ -52,14 +66,14 @@
                         <input id="name" type="text" v-model="form.name" @input="validate('name')" required/>
                         <p v-if="validations['name']" class="validation">{{ validations['name'] }}</p>
                     </div>
-                    <div class="w3-col s6">
+                    <div class="w3-col s7">
                         <label>Geburtstag</label><br>
                         <input type="date" v-bind:max="new Date().toISOString().split('T')[0]" v-model="form.birthday"
                                @input="validate('birthday')"
                                required/>
                         <p v-if="validations['birthday']" class="validation">{{ validations['birthday'] }}</p>
                     </div>
-                    <div class="w3-col s6">
+                    <div class="w3-col s5">
                         <label>Geschlecht</label><br>
                         <select v-model="form.gender" required>
                             <option value="0" selected>{{ constant.genders[0] }}</option>
@@ -70,14 +84,14 @@
             </div>
             <div class="w3-col l6 w3-margin-bottom">
                 <div class="w3-row-padding w3-stretch w3-margin-bottom">
-                    <div class="w3-col s8">
+                    <div class="w3-col s7">
                         <label for="height-cm">Grösse</label><br>
                         <input id="height-cm" type="number" step=".1" min="0"
                                v-model="form.height.value"
                                @input="validate('height')" required/>
                         <p v-if="validations['height']" class="validation">{{ validations['height'] }}</p>
                     </div>
-                    <div class="w3-col s4"><br>
+                    <div class="w3-col s5"><br>
                         <select v-model="form.height.unit">
                             <option value="0" selected>Zentimeter</option>
                             <option value="1">Feet</option>
@@ -85,14 +99,14 @@
                     </div>
                 </div>
                 <div class="w3-row-padding w3-stretch">
-                    <div class="w3-col s8">
+                    <div class="w3-col s7">
                         <label for="weight-kg">Gewicht</label><br>
                         <input id="weight-kg" type="number" step=".1" min="0"
                                v-model="form.weight.value"
                                @input="validate('weight')">
                         <p v-if="validations['weight']" class="validation">{{ validations['weight'] }}</p>
                     </div>
-                    <div class="w3-col s4"><br>
+                    <div class="w3-col s5"><br>
                         <select v-model="form.weight.unit">
                             <option value="0" selected>Kilogramm</option>
                             <option value="1">Pounds</option>

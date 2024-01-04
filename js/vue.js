@@ -6,15 +6,15 @@ Vue.createApp({
         return {
             bmi: null,
             form: {
-                name: "alan",
+                name: null,
                 birthday: new Date().toISOString().split('T')[0],
                 gender: 0,
                 height: {
-                    value: 177,
+                    value: 0,
                     unit: 0
                 },
                 weight: {
-                    value: 85,
+                    value: 0,
                     unit: 0
                 }
             },
@@ -22,7 +22,8 @@ Vue.createApp({
             history: [],
             constant: {
                 genders: ["männlich", "weiblich"]
-            }
+            },
+            errorMessage: null
         }
     },
     mounted() {
@@ -46,9 +47,11 @@ Vue.createApp({
                     this.history.unshift(response);
                     this.bmi = response.bmi;
                     this.drawCanvas(this.bmi); // draw face
+                    this.errorMessage = null; // reset backend error
                 })
                 .catch(error => {
                     console.error(error);
+                    this.errorMessage = error; // display error message
                 });
         },
         drawCanvas(bmi) {
@@ -158,13 +161,13 @@ Vue.createApp({
                 xhr.onload = function () {
                     if (xhr.status >= 200 && xhr.status < 300) {
                         try {
-                            responseData = JSON.parse(xhr.responseText);
+                            let responseData = JSON.parse(xhr.responseText);
                             resolve(responseData); // Resolve the promise with response data
                         } catch (e) {
                             reject('Could not parse JSON.')
                         }
                     } else {
-                        reject('Request failed with status: ' + xhr.status); // Reject with an error message
+                        reject(xhr.status === 400 ? '[' + xhr.status + '] ' + JSON.parse(xhr.responseText).error : 'Request failed with status: ' + xhr.status); // Reject with an error message
                     }
                 };
                 xhr.onerror = function () {
