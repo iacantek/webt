@@ -73,6 +73,15 @@ input[type=radio] {
     color: red;
 }
 
+div.center {
+    display: flex;
+    align-items: center;
+}
+
+div.center > canvas {
+    margin: 0 auto;
+}
+
 table tbody tr td {
     text-align: center;
 }
