@@ -1,5 +1,8 @@
 <?php
 
+// defining cookie name as constant
+define("COOKIE_NAME", "HighestBMI");
+
 function query_json_result($conn, $queryString, $single = false)
 {
     // preparing database query
@@ -29,7 +32,26 @@ function query_json_result($conn, $queryString, $single = false)
         }
     }
 
-    return json_encode($single ? $calculations[0] : $calculations);
+    if ($single) {
+        // creating response object
+        $response = new stdClass();
+        $response->result = $calculations[0];
+        $bmi = (double)$response->result['bmi'];
+
+        // check if HighestBMI cookie is set
+        $currentHighestBMI = isset($_COOKIE[COOKIE_NAME]) ? (double)$_COOKIE[COOKIE_NAME] : 0;
+
+        if ($currentHighestBMI < $bmi) {
+            setcookie(COOKIE_NAME, $bmi, time() + (24 * 3600));
+            $currentHighestBMI = $bmi;
+        }
+
+        $response->highestBmi = $currentHighestBMI;
+
+        return json_encode($response);
+    }
+
+    return json_encode($calculations);
 }
 
 function throw_error($status_code, $message)

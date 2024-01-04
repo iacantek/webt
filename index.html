@@ -125,8 +125,13 @@
     <h2 id="output">Ausgabebereich</h2>
     <div class="w3-row-padding w3-stretch">
         <div class="w3-col m6">
-            <p v-if="bmi">BMI = <b>{{ bmi }} kg/m<sup>2</sup></b></p>
+            <p v-if="bmi">BMI: <b>{{ bmi }} kg/m<sup>2</sup></b></p>
             <p v-else>Warte auf Eingabe für BMI Berechnung...</p>
+
+            <div v-if="highestBmi">
+                <hr>
+                <p>Highest BMI recorded: <b>{{ highestBmi }} kg/m<sup>2</sup></b></p>
+            </div>
         </div>
         <div class="w3-col m6">
             <canvas id="faceExpression" width="200" height="200"></canvas>

@@ -46,10 +46,11 @@ Vue.createApp({
 
             this.sendRequest('POST', 'backend.php', this.form)
                 .then(response => {
-                    this.history.unshift(response);
-                    this.bmi = response.bmi;
+                    this.history.unshift(response.result);
+                    this.bmi = response.result.bmi;
+                    this.highestBmi = response.highestBmi;
                     this.drawCanvas(this.bmi); // draw face
-                    this.errorMessage = null; // reset backend error
+                    this.errorMessage = null; // reset error message
                 })
                 .catch(error => {
                     console.error(error);
@@ -60,9 +61,8 @@ Vue.createApp({
             const canvas = document.getElementById('faceExpression');
             const ctx = canvas.getContext('2d');
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             // Draw face (circle)
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.beginPath();
             ctx.arc(100, 100, 50, 0, Math.PI * 2);
             ctx.fillStyle = this.getBMIColor(bmi);
