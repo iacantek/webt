@@ -65,7 +65,7 @@ function bad_request($message)
     throw_error(400, $message);
 }
 
-// database connection
+// opening database connection
 $conn = mysqli_connect("localhost", "root", "", "webt");
 if (!$conn) {
     die(json_encode(['error' => "Database connection failed"]));
@@ -73,11 +73,13 @@ if (!$conn) {
 
 // getting http request method
 $method = $_SERVER['REQUEST_METHOD'];
-$body = file_get_contents("php://input");
 
 if ($method == 'GET') { // GET request -> returns all calculations
     echo(query_json_result($conn, "SELECT * FROM calculation ORDER BY id DESC"));
 } else if ($method == 'POST') { // POST request -> creates calculation record and returns it
+    // getting body
+    $body = file_get_contents("php://input");
+
     // check if body is empty
     if (!$body) {
         bad_request("Body cannot be empty.");
@@ -130,9 +132,9 @@ if ($method == 'GET') { // GET request -> returns all calculations
 
     // return created record as json
     echo query_json_result($conn, "SELECT * FROM calculation ORDER BY id DESC LIMIT 1", true);
-    exit;
 }
 
+// closing db connection
 mysqli_close($conn);
 
 ?>

@@ -5,6 +5,7 @@ Vue.createApp({
     data() {
         return {
             bmi: null,
+            highestBmi: null,
             form: { // form data for POST request
                 name: null,
                 birthday: new Date().toISOString().split('T')[0],
