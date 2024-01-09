@@ -32,8 +32,8 @@ Vue.createApp({
         this.sendRequest('GET', 'backend.php', null)
             .then(response => {
                 this.history = response; // fill in history items
-                // draw face for first calculation
-                this.drawCanvas(this.history[0]?.bmi ?? 18.5);
+                if (this.history.length) // draw face for first calculation if exists
+                    this.drawCanvas(this.history[0].bmi);
             })
             .catch(error => {
                 console.error(error);
